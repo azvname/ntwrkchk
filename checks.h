@@ -165,7 +165,7 @@ int check_ppp_state() {
 
 void check_ssh_state() {
   //usleep(1000*1000);
-  /*
+
   char buffer_prc[256];
   memset(buffer_prc, 0, 255);
   buffer_prc[255]='\0';
@@ -179,16 +179,21 @@ void check_ssh_state() {
     fread(buffer_prc, 1, 255, prc);
     printf("Output from prc: %s\n", buffer_prc);
 
-    for(int i=0; i<atoi(&buffer_prc[0]); i++){
-      set_color(4,3,0,90,0,40);
-      usleep(1000*500);
-      clear_color(4,3,0);
-      usleep(1000*100);
-
+    if(atoi(&buffer_prc[0]) > 0) {
+      set_green(500);
+    }else{
+      set_red(500);
     }
+    // for(int i=0; i<atoi(&buffer_prc[0]); i++){
+    //   set_color(4,3,0,90,0,40);
+    //   usleep(1000*500);
+    //   clear_color(4,3,0);
+    //   usleep(1000*100);
+    //
+    // }
     pclose(prc);
   }
-  */ 
+
 
   // FILE* prc_check_connect = popen("journalctl -b|tail -20|grep -i sshd", "r");
 
@@ -201,50 +206,31 @@ void check_ssh_state() {
   memset(buffer_state_ssh, 0, buffer_state_ssh_size);
   if(prc_check_connect!=NULL){
     fread(buffer_state_ssh, 1, buffer_state_ssh_size, prc_check_connect);
-
     //printf("%s\n", strstr(buffer_state_ssh, "a"));
     if (strstr(buffer_state_ssh, "sshd") != NULL) {
-      if (strstr(buffer_state_ssh, "fail") != NULL) {
-        printf("Failure attemption to get access\n");
-        set_yellow(500);
-        last_state_ssh=1;
-      } else if (strstr(buffer_state_ssh, "Invalid user") != NULL) {
+      if (strstr(buffer_state_ssh, "fail") != NULL || strstr(buffer_state_ssh, "Invalid user") != NULL) {
         printf("Invalid user\n");
         set_yellow(500);
         last_state_ssh=1;
-      } else if (strstr(buffer_state_ssh, "Connection closed") != NULL) {
-        printf("Connection closed by user\n");
-        set_red(500);
-        last_state_ssh=0;
-      } else if (strstr(buffer_state_ssh, "Accepted password") != NULL || strstr(buffer_state_ssh, "Accepted publickey")) {
-        printf("Accepted password from user\n");
-        set_green(500);
-        last_state_ssh=2;
-      } else if (strstr(buffer_state_ssh, "Received disconnect") != NULL) {
-        printf("Received disconnect from user\n");
-        set_red(500);
-        last_state_ssh=0;
-
       }
 
-
-
     }
+
     // printf("%s\n", NULL);
 
-    switch (last_state_ssh) {
-      case 0:
-        set_red(500);
-        break;
-      case 1:
-        set_yellow(500);
-        break;
-      case 2:
-        set_green(500);
-        break;
-      default:
-        break;
-    }
+    // switch (last_state_ssh) {
+    //   case 0:
+    //     set_red(500);
+    //     break;
+    //   case 1:
+    //     set_yellow(500);
+    //     break;
+    //   case 2:
+    //     set_green(500);
+    //     break;
+    //   default:
+    //     break;
+    // }
 
     pclose(prc_check_connect);
   }
