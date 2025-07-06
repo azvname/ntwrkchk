@@ -52,9 +52,9 @@ cd ntwrkchk
 gcc main.c -lwiringPi -o v4
 
 ```
-## Отредактируйте файл сервиса l2tp_up.serivce: укажите свой путь в ExecStart. 
+Отредактируйте файл сервиса l2tp_up.serivce: укажите свой путь в ExecStart. 
 
-## Активируем демон
+## Активируем сервис и добавляем в автозагрузку
 ```sh
 mv l2tp_up.service /etc/systemd/system
 sudo systemctl enable --now l2tp_up.service
