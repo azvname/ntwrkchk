@@ -1,0 +1,25 @@
+[Unit]
+Description=Running l2tp_up service 
+#After=network.target
+#Requires=xl2tpd.service
+#After=xl2tpd.service
+Requires=ifup@wlan0.service
+After=ifup@wlan0.service
+#Requires=network.target
+#After=systemd-networkd-wait-online --interface=wlan0
+[Service]
+#Type=simple
+#Type=oneshot
+Type=forking
+#RemainAfterExit=no
+#RemainAfterExit=yes
+#Restart=always
+StartLimitInterval=10
+PIDFile=/var/run/v4.pid
+User=root
+#ExecStart=bash /home/zakhar/scripts/start.sh
+ExecStart=/home/zakhar/fs_project/v4
+ExecStop=bash /home/zakhar/scripts/stop.sh
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
