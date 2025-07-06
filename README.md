@@ -1,10 +1,13 @@
 # ntwrkchk
 
 
+
 ## Подключение светодиода
-# Красный - 10
-# Зелёный - 8
-# Синий - 3
+```text
+Красный - 10
+Зелёный - 8
+Синий - 3
+```
 
 
 ![Куда что подключать](https://raw.githubusercontent.com/azvname/ntwrkchk/92503367fb67c9dda642ebdb4323ecf819541556/pinout.jpg)
