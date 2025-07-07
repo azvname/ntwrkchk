@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
-#include <semaphore.h>
+// #include <semaphore.h>
 #include <string.h>
 #include <errno.h>
 
@@ -14,7 +14,7 @@
 #include <linux/kernel.h>
 
 
-
+#include "settings.h"
 #include "softpwm.h"
 #include "checks.h"
 
@@ -71,7 +71,7 @@ int main () {
 
   int xl2tpd_state;
   int ppp_state;
-  int is_the_not_first_attempt=1;
+  // int is_the_not_first_attempt=1;
   int timeout_between_light = 500;
   //int start=0, end=0;
   //start = clock();
@@ -119,7 +119,7 @@ int main () {
       printf("PPP is UP\n");
 
 
-      is_the_not_first_attempt = 2;
+      // is_the_not_first_attempt = 2;
       //continue; 
     } 
     usleep(1000*timeout_between_light);
@@ -164,87 +164,6 @@ int main () {
 
 
 
-
-  exit(0);
-
-
-
-  set_color(4,3,0,100,0,0);
-  printf("orange\n");
-  delayMicroseconds(1000*2000);
-  clear_color(4,3,0);
-  delayMicroseconds(1000*20);
-
-  set_color(4,3,0,80,9,0);
-  printf("orange\n");
-  delayMicroseconds(1000*2000);
-  clear_color(4,3,0);
-  delayMicroseconds(1000*20);
-
-  set_color(4,3,0,0,10,0);
-  printf("orange\n");
-  delayMicroseconds(1000*2000);
-  clear_color(4,3,0);
-  delayMicroseconds(1000*20);
-
-  set_color(4,3,0,0,0,100);
-  printf("orange\n");
-  delayMicroseconds(1000*2000);
-  clear_color(4,3,0);
-  delayMicroseconds(1000*20);
-
-  exit(0);
-
-
-
-  set_color(4,3,0,0,100,0);
-  printf("orange\n");
-  sleep(2);
-  clear_color(4,3,0);
-  sleep(1);
-
-  set_color(4,3,0,0,0,100);
-  printf("orange\n");
-  sleep(2);
-  clear_color(4,3,0);
-  sleep(1);
-
-  set_color(4,3,0,100,0,0);
-  printf("orange\n");
-  sleep(2);
-  clear_color(4,3,0);
-  sleep(1);
-
-  set_color(4,3,0,100,0,100);
-  printf("orange\n");
-  sleep(2);
-  clear_color(4,3,0);
-  sleep(1);
-
-  set_color(4,3,0,70,2,10);
-  printf("purple\n");
-  sleep(2);
-  clear_color(4,3,0);
-  sleep(2);
-
-  set_color(4,3,0,0,2,0);
-  printf("green\n");
-  sleep(2);
-  clear_color(4,3,0);
-  sleep(1);
-
-  // exit(0);
-  set_color(4,3,0,0,50,0);
-  printf("green\n");
-  sleep(2);
-  clear_color(4,3,0);
-  sleep(1);
-
-  set_color(4,3,0,0,100,0);
-  printf("green\n");
-  sleep(2);
-  clear_color(4,3,0);
-  sleep(1);
 
 
 

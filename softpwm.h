@@ -123,14 +123,33 @@ void* color_func(void* color_struct) {
 }
 
 
-void func_signal(int sig) {
-  digitalWrite(0, LOW);
-  digitalWrite(4, LOW);
-  digitalWrite(3, LOW);
 
-  printf("Сработал обработчик сигналов.\n");
-  exit(0);
+void set_blue(size_t millesec) { 
+  set_color(4,3,0,0,0,100);
+  delayMicroseconds(1000*millesec);
+  clear_color(4,3,0);
+  delayMicroseconds(1000*10);
+}
 
+void set_yellow(size_t millesec) { 
+  set_color(4,3,0,90,15,0);
+  delayMicroseconds(1000*millesec);
+  clear_color(4,3,0);
+  delayMicroseconds(1000*10);
+}
+
+void set_green(size_t millesec) {
+  set_color(4,3,0,0,20,0);
+  delayMicroseconds(1000*millesec);
+  clear_color(4,3,0);
+  delayMicroseconds(1000*10);
+}
+
+void set_red(size_t millesec) {
+  set_color(4,3,0,100,0,0);
+  delayMicroseconds(1000*millesec);
+  clear_color(4,3,0);
+  delayMicroseconds(1000*10);
 }
 
 

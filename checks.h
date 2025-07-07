@@ -1,34 +1,9 @@
-
-
-void set_blue(size_t millesec) { 
-  set_color(4,3,0,0,0,100);
-  delayMicroseconds(1000*millesec);
-  clear_color(4,3,0);
-  delayMicroseconds(1000*10);
-}
-
-void set_yellow(size_t millesec) { 
-  set_color(4,3,0,90,15,0);
-  delayMicroseconds(1000*millesec);
-  clear_color(4,3,0);
-  delayMicroseconds(1000*10);
-}
-
-void set_green(size_t millesec) {
-  set_color(4,3,0,0,20,0);
-  delayMicroseconds(1000*millesec);
-  clear_color(4,3,0);
-  delayMicroseconds(1000*10);
-}
-
-void set_red(size_t millesec) {
-  set_color(4,3,0,100,0,0);
-  delayMicroseconds(1000*millesec);
-  clear_color(4,3,0);
-  delayMicroseconds(1000*10);
-}
-
 void check_device_state() {
+  // some other varian "systemctl --quiet --failed |wc -l"
+  // sudo dmesg -H |grep -i error
+
+
+
   FILE* prc = popen("systemctl is-active multi-user.target", "r");
   const int buffer_device_state_size=64;
   char buffer_device_state[buffer_device_state_size];

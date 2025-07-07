@@ -28,7 +28,7 @@
 
 Установите зависимости
 ```sh
-sudo apt install gcc g++ git
+sudo apt install gcc g++ git ifupdown
 git clone https://github.com/orangepi-xunlong/wiringOP.git
 cd wiringOP
 sudo ./build clean
