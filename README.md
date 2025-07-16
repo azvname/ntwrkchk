@@ -54,7 +54,7 @@ gcc main.c -lwiringPi -o v4
 
 Активируем сервис и добавляем в автозагрузку
 ```sh
-mv l2tp_up.service /etc/systemd/system
+sudo mv l2tp_up.service /etc/systemd/system
 sudo systemctl enable --now l2tp_up.service
 ```
 
