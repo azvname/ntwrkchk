@@ -21,8 +21,12 @@
 Синий - 3
 ```
 
+
+
+
+
 Куда что подключать
-![Куда что подключать](https://raw.githubusercontent.com/azvname/ntwrkchk/92503367fb67c9dda642ebdb4323ecf819541556/pinout.jpg)
+![Куда что подключать](https://raw.githubusercontent.com/azvname/ntwrkchk/5d84e765c012de4e2d8b895e4b252455e70d8f77/pinout.jpg)
 
 
 
