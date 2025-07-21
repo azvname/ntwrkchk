@@ -97,7 +97,7 @@ int check_xl2tpd_state() {
 }
 
 
-int check_ppp_state() {
+void check_ppp_state() {
   //set_color(4,3,0,0,90,0);
   //usleep(1000*1000*2);
   FILE* fi_ppp;
@@ -109,7 +109,9 @@ int check_ppp_state() {
 
   static int acc=0;
   acc+=1;
+  acc%=10;
 
+  printf("acc: %d\n", acc);
   printf("---> %d ---> %d\n", fi_ppp, errno == EINVAL);
   if(fi_ppp!=NULL) {
     //fgets(buffer, 127, fi_ppp);
@@ -117,30 +119,35 @@ int check_ppp_state() {
     //pclose(fi_ppp);
     if(WEXITSTATUS(pclose(fi_ppp)) == 1) {
       set_red(lighting_time);
-      return -1;
+      if(acc == 1) up_ppp();
+      return;
 
     }
 
     if(buffer[0] == '1') {
       set_green(lighting_time);
-      return 1; //interface is up
+
+
+
+      //usleep(1000*1000*5);
+      printf("PPP is UP\n");
+
+      return; //interface is up
     }else{
       set_yellow(lighting_time);
-      return 0; // interface is down
+      if(acc == 1) up_ppp();
+      return; // interface is down
     }
 
     printf("ppp buffer: %c\n", buffer[0]);
 
 
   }
-  printf("acc: %d\n", acc);
 
   set_red(lighting_time);
-  return -1; // interface is not exists
+  if(acc == 1) up_ppp();
 
-
-
-
+  return; // interface is not exists
 
 }
 

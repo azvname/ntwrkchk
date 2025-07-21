@@ -30,16 +30,38 @@ int main (int argc, char* argv[]) {
     exit(EXIT_SUCCESS); // success on call the fork function
   }
 
+  printf("1111\n");
   if(setsid() < 0){
     exit(EXIT_FAILURE);
   }
 
-  if(argv[1] == "stop"){
-    system("echo \"d vpn-connection\"|tee /var/run/xl2tpd/l2tp-control");
+  create_pid();
+
+  printf("2222\n");
+
+  if(strncmp(argv[1], "stop", 4)==0){
+    FILE* fo=fopen("/var/run/xl2tpd/l2tp-control", "w");
+    if(fo!=NULL){
+      fprintf(fo,"%s","d vpn-connection");
+      fclose(fo);
+
+    }else{
+      return - 1;
+    }
+
+
+    FILE* prc = popen("pkill v4", "r");
+    const int buffer_size=64;
+    char buffer[buffer_size];
+
+    if(prc!=NULL) {
+      fread(buffer, 1, 63, prc);
+      printf("%s\n", buffer);
+    }
     func_signal(-1);
-    system("pkill v4");
     return 0;
-  } else if (argv[1] == "start") {
+
+  } else if (strncmp(argv[1], "start", 5)==0) {
     wiringPiSetup();
 
     int rpin=4;
@@ -101,15 +123,22 @@ int main (int argc, char* argv[]) {
         printf("xl2tpd is UP\n");
         //continue;
       }
-      if ((ppp_state=check_ppp_state()) != 1) { 
-        printf("ppp не запущен по этому - запускаюсь!\n");
-        system("echo \"c vpn-connection\"|tee /var/run/xl2tpd/l2tp-control");
-        printf("PPP is UP\n");
 
-
-        // is_the_not_first_attempt = 2;
-        //continue; 
-      } 
+      check_ppp_state();
+      // if ((ppp_state=check_ppp_state()) != 1) { 
+      //   printf("ppp не запущен по этому - запускаюсь!\n");
+      //   //system("echo \"c vpn-connection\"|tee /var/run/xl2tpd/l2tp-control");
+      //   FILE* fo = fopen("/var/run/xl2tpd/l2tp-control", "w");
+      //   fprintf(fo, "%s", "c vpn-connection");
+      //   fclose(fo);
+      //
+      //   usleep(1000*1000*5);
+      //   printf("PPP is UP\n");
+      //
+      //
+      //   // is_the_not_first_attempt = 2;
+      //   //continue; 
+      // } 
       usleep(1000*timeout_between_light);
       //end = clock();
 
@@ -150,6 +179,11 @@ int main (int argc, char* argv[]) {
     // pthread_join(thread_pool[i_green], NULL);
     // pthread_join(thread_pool[i_blue], NULL);
     func_signal(-1);
+
+  }else{
+    printf("no no no no no\n");
+
+    return -1;
 
   }
   //delay(1000*1000); //milliseconds

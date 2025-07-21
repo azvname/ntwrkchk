@@ -11,15 +11,18 @@ After=ifup@wlan0.service
 #Type=simple
 #Type=oneshot
 Type=forking
+
 #RemainAfterExit=no
 #RemainAfterExit=yes
 #Restart=always
-StartLimitInterval=10
-PIDFile=/var/run/v4.pid
+StartLimitInterval=60
+#PIDFile=/var/run/v4.pid # legacy
+PIDFile=/run/v4.pid
 User=root
 #ExecStart=bash /home/zakhar/scripts/start.sh
-ExecStart=/home/zakhar/fs_project/v4
-ExecStop=bash /home/zakhar/scripts/stop.sh
+ExecStart=/home/zakhar/fs_project/v4 start
+ExecStop=/home/zakhar/fs_project/v4 stop
 Restart=on-failure
+RestartSec=10
 [Install]
 WantedBy=multi-user.target
