@@ -46,7 +46,7 @@ int check_wifi_state(){
     return -1;
   }
   fgets(buffer, 127, fi_wlan);
-  printf("wlan buffer: %c\n", buffer[0]);
+  //printf("wlan buffer: %c\n", buffer[0]);
   fclose(fi_wlan);
   if(buffer[0]=='0'){
     set_yellow(lighting_time);
@@ -109,10 +109,10 @@ void check_ppp_state() {
 
   static int acc=0;
   acc+=1;
-  acc%=10;
+  acc%=20;
 
-  printf("acc: %d\n", acc);
-  printf("---> %d ---> %d\n", fi_ppp, errno == EINVAL);
+  //printf("acc: %d\n", acc);
+  //printf("---> %d ---> %d\n", fi_ppp, errno == EINVAL);
   if(fi_ppp!=NULL) {
     //fgets(buffer, 127, fi_ppp);
     fread(buffer, 1, 127, fi_ppp);
@@ -130,7 +130,7 @@ void check_ppp_state() {
 
 
       //usleep(1000*1000*5);
-      printf("PPP is UP\n");
+      //printf("PPP is UP\n");
 
       return; //interface is up
     }else{
@@ -139,7 +139,7 @@ void check_ppp_state() {
       return; // interface is down
     }
 
-    printf("ppp buffer: %c\n", buffer[0]);
+    //printf("ppp buffer: %c\n", buffer[0]);
 
 
   }
@@ -165,7 +165,7 @@ void check_ssh_state() {
     printf("Happen some error\n");
   }else{
     fread(buffer_prc, 1, 255, prc);
-    printf("Output from prc: %s\n", buffer_prc);
+    //printf("Output from prc: %s\n", buffer_prc);
 
     if(atoi(&buffer_prc[0]) > 0) {
       set_green(lighting_time);
@@ -185,8 +185,10 @@ void check_ssh_state() {
 
   // FILE* prc_check_connect = popen("journalctl -b|tail -20|grep -i sshd", "r");
 
+  //journalctl -u ssh -n 20 -r -b 0
 
-  FILE* prc_check_connect = popen("journalctl --since \"30 sec ago\"", "r");
+  //FILE* prc_check_connect = popen("journalctl --since \"30 sec ago\"", "r");
+  FILE* prc_check_connect = popen("journalctl -u ssh -n 20 -r -b 0 --since '15 sec ago'", "r");
   static int last_state_ssh=0; // 0 - disconnect, 1 - attemption failure, 2 - success
 
   const int buffer_state_ssh_size = 1024;
@@ -285,8 +287,8 @@ void check_ethernet_state() {
   // printf("CHECKER: %s %s\n", buffer_duplex, buffer_speed);
   // strcat(buffer_duplex, buffer_speed);
 
-  printf("%s\n", buffer_duplex);
-  printf("%s\n", buffer_speed);
+  //printf("%s\n", buffer_duplex);
+  //printf("%s\n", buffer_speed);
   // buffer_duplex[strlen(buffer_duplex)-1]='/';
   // sprintf(buffer_duplex + strlen(buffer_duplex), "%s\n",  buffer_speed);
   // buffer_duplex[strlen(buffer_duplex) - 2]='\0';

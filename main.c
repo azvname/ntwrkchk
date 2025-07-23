@@ -30,25 +30,18 @@ int main (int argc, char* argv[]) {
     exit(EXIT_SUCCESS); // success on call the fork function
   }
 
-  printf("1111\n");
+  //dbg_printf("1111\n", argv[2]);
+
   if(setsid() < 0){
     exit(EXIT_FAILURE);
   }
 
   create_pid();
 
-  printf("2222\n");
+  //dbg_printf("2222\n", argv[2]);
 
   if(strncmp(argv[1], "stop", 4)==0){
-    FILE* fo=fopen("/var/run/xl2tpd/l2tp-control", "w");
-    if(fo!=NULL){
-      fprintf(fo,"%s","d vpn-connection");
-      fclose(fo);
-
-    }else{
-      return - 1;
-    }
-
+    down_ppp();
 
     FILE* prc = popen("pkill v4", "r");
     const int buffer_size=64;
@@ -56,7 +49,7 @@ int main (int argc, char* argv[]) {
 
     if(prc!=NULL) {
       fread(buffer, 1, 63, prc);
-      printf("%s\n", buffer);
+      //printf("%s\n", buffer);
     }
     func_signal(-1);
     return 0;
@@ -93,7 +86,7 @@ int main (int argc, char* argv[]) {
 
 
 
-    printf("Started loop!\n");
+    //dbg_printf("Started loop!\n", argv[2]);
 
     while(1){
       // check_device_state();
@@ -108,7 +101,7 @@ int main (int argc, char* argv[]) {
       //continue;
       //printf("--------------------------------> %.6f\n", (double)(end-start)/CLOCKS_PER_SEC);
       if (check_wifi_state() == 1) { 
-        printf("Wifi is UP\n");
+        // dbg_printf("OK - wifi\n", argv[2]);
         //continue; 
       }else{
         // system("systemctl restart networking.service");
@@ -118,13 +111,12 @@ int main (int argc, char* argv[]) {
       usleep(1000*timeout_between_light);
 
       if ((xl2tpd_state=check_xl2tpd_state()) == 0) {
-        printf("xl2tpd не запущен по этому - запускаюсь!\n");
+        //dbg_printf("xl2tpd не запущен по этому - запускаюсь!\n", argv[2]);
         system("/etc/init.d/xl2tpd start");
-        printf("xl2tpd is UP\n");
+        // dbg_printf("OK - xl2tpd\n", argv[2]);
         //continue;
       }
 
-      check_ppp_state();
       // if ((ppp_state=check_ppp_state()) != 1) { 
       //   printf("ppp не запущен по этому - запускаюсь!\n");
       //   //system("echo \"c vpn-connection\"|tee /var/run/xl2tpd/l2tp-control");
@@ -139,6 +131,7 @@ int main (int argc, char* argv[]) {
       //   // is_the_not_first_attempt = 2;
       //   //continue; 
       // } 
+      check_ppp_state();
       usleep(1000*timeout_between_light);
       //end = clock();
 
@@ -151,37 +144,21 @@ int main (int argc, char* argv[]) {
 
 
 
-
-
-
-      // Конец отсчета времени
-
-      // gettimeofday(&end_tv, NULL);
-   
-   //    // Переводим время в микросекунды для удобства
-   //    start_us = start_tv.tv_sec * 1000000 + start_tv.tv_usec;
-   //    end_us = end_tv.tv_sec * 1000000 + end_tv.tv_usec;
-   // 
-   //    // Вычисление прошедшего времени в миллисекундах
-   //    elapsed_ms = (double)(end_us - start_us) / 1000.0;
-   // 
-   //    printf("Время выполнения: %.3f миллисекунд\n", elapsed_ms);
-   //    //printf("Uptime: %lld миллисекунд\n", s_info->uptime);
     }
 
-    printf("Eneded loop!\n");
+    // dbg_printf("Eneded loop!\n", argv[2]);
     // pthread_mutex_destroy(&m);
     //pthread_exit(NULL); // wait untill threads ended.
 
     free(thread_pool);
-    printf("Programm success ended.\n");
+    // dbg_printf("Programm success ended.\n", argv[2]);
     // pthread_join(thread_pool[i_red], NULL);
     // pthread_join(thread_pool[i_green], NULL);
     // pthread_join(thread_pool[i_blue], NULL);
     func_signal(-1);
 
   }else{
-    printf("no no no no no\n");
+    dbg_printf("no no no no no\n", argv[2]);
 
     return -1;
 
