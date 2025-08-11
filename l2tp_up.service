@@ -20,8 +20,10 @@ StartLimitInterval=60
 PIDFile=/run/v4.pid
 User=root
 #ExecStart=bash /home/zakhar/scripts/start.sh
-ExecStart=/home/zakhar/fs_project/v4 start
-ExecStop=/home/zakhar/fs_project/v4 stop
+ExecStart=/home/zakhar/fs_project/v4 start off
+ExecStop=/home/zakhar/fs_project/v4 stop off 
+#ExecPostStop=/home/zakhar/fs_project/clear.sh
+#ExecStop=/home/zakhar/fs_project/clear.sh
 Restart=on-failure
 RestartSec=10
 [Install]

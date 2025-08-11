@@ -32,7 +32,7 @@
 
 Установите зависимости
 ```sh
-sudo apt install gcc g++ git ifupdown
+sudo apt install gcc g++ git ifupdown strongswan xl2tpd
 git clone https://github.com/orangepi-xunlong/wiringOP.git
 cd wiringOP
 sudo ./build clean

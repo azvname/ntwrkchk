@@ -1,5 +1,5 @@
 int lighting_time=500;
-void check_device_state() {
+void check_device_state(rgb_led* led) {
   // some other varian "systemctl --quiet --failed |wc -l"
   // sudo dmesg -H |grep -i error
 
@@ -13,15 +13,18 @@ void check_device_state() {
     fread(buffer_device_state, 1, 63, prc);
 
     if(WEXITSTATUS(pclose(prc)) == -1){
-      set_yellow(lighting_time);
+      //set_yellow(lighting_time);
+      sc_yellow(led);
       return;
     }
     if(strncmp(buffer_device_state, "active", 6) == 0) {
-      set_green(lighting_time);
+      // set_green(lighting_time);
+      sc_green(led);
       return;
       //return 1; //daemon is active
     }else{
-      set_red(lighting_time);
+      // set_red(lighting_time);
+      sc_red(led);
       return;
       //return 0; // daemon is inactive
     }
@@ -29,41 +32,47 @@ void check_device_state() {
 
   }
 
-  set_red(lighting_time);
+  sc_red(led);
+  // set_red(lighting_time);
   return;
 
 
 
 }
 
-int check_wifi_state(){
+int check_wifi_state(rgb_led* led){
   char buffer[128];
   FILE* fi_wlan = fopen("/sys/class/net/wlan0/carrier", "r");
   if(fi_wlan == NULL) {
     printf("Some error with read wlan0\n");
     // exit(0);
-    set_red(lighting_time);
+    // set_red(lighting_time);
+    sc_red(led);
     return -1;
   }
   fgets(buffer, 127, fi_wlan);
   //printf("wlan buffer: %c\n", buffer[0]);
   fclose(fi_wlan);
   if(buffer[0]=='0'){
-    set_yellow(lighting_time);
+    sc_yellow(led);
+    // set_yellow(lighting_time);
     return 0;
     
   }else if(buffer[0]=='1'){
-    set_green(lighting_time);
+    // set_green(lighting_time);
+    sc_green(led);
     return 1;
 
   }else{
-    set_red(lighting_time);
+    sc_red(led);
+    // set_red(lighting_time);
     return -1;
   }
 
-  set_red(lighting_time);
+  sc_red(led);
+  // set_red(lighting_time);
   return -1;
-  //set_color(4,3,0,0,0,90);
+  // set_color(4,3,0,0,0,90);
 
 }
 
@@ -97,7 +106,7 @@ int check_xl2tpd_state() {
 }
 
 
-void check_ppp_state() {
+void check_ppp_state(rgb_led* led) {
   //set_color(4,3,0,0,90,0);
   //usleep(1000*1000*2);
   FILE* fi_ppp;
@@ -109,7 +118,7 @@ void check_ppp_state() {
 
   static int acc=0;
   acc+=1;
-  acc%=20;
+  acc%=30;
 
   //printf("acc: %d\n", acc);
   //printf("---> %d ---> %d\n", fi_ppp, errno == EINVAL);
@@ -118,15 +127,16 @@ void check_ppp_state() {
     fread(buffer, 1, 127, fi_ppp);
     //pclose(fi_ppp);
     if(WEXITSTATUS(pclose(fi_ppp)) == 1) {
-      set_red(lighting_time);
+      // set_red(lighting_time);
+      sc_red(led);
       if(acc == 1) up_ppp();
       return;
 
     }
 
     if(buffer[0] == '1') {
-      set_green(lighting_time);
-
+      // set_green(lighting_time);
+      sc_green(led);
 
 
       //usleep(1000*1000*5);
@@ -134,7 +144,8 @@ void check_ppp_state() {
 
       return; //interface is up
     }else{
-      set_yellow(lighting_time);
+      // set_yellow(lighting_time);
+      sc_yellow(led);
       if(acc == 1) up_ppp();
       return; // interface is down
     }
@@ -144,14 +155,15 @@ void check_ppp_state() {
 
   }
 
-  set_red(lighting_time);
+  sc_red(led);
+  // set_red(lighting_time);
   if(acc == 1) up_ppp();
 
   return; // interface is not exists
 
 }
 
-void check_ssh_state() {
+void check_ssh_state(rgb_led* led) {
   //usleep(1000*1000);
 
   char buffer_prc[256];
@@ -168,9 +180,11 @@ void check_ssh_state() {
     //printf("Output from prc: %s\n", buffer_prc);
 
     if(atoi(&buffer_prc[0]) > 0) {
-      set_green(lighting_time);
+      //set_green(lighting_time);
+      sc_green(led);
     }else{
-      set_red(lighting_time);
+      sc_red(led);
+      //set_red(lighting_time);
     }
     // for(int i=0; i<atoi(&buffer_prc[0]); i++){
     //   set_color(4,3,0,90,0,40);
@@ -200,7 +214,8 @@ void check_ssh_state() {
     if (strstr(buffer_state_ssh, "sshd") != NULL) {
       if (strstr(buffer_state_ssh, "fail") != NULL || strstr(buffer_state_ssh, "Invalid user") != NULL) {
         printf("Invalid user\n");
-        set_yellow(lighting_time);
+        // set_yellow(lighting_time);
+        sc_yellow(led);
         last_state_ssh=1;
       }
 
@@ -244,7 +259,7 @@ void check_ssh_state() {
 
 }
 
-void check_ethernet_state() {
+void check_ethernet_state(rgb_led* led) {
   //FILE* prc = popen("dmesg|grep -i 'link is'|awk '{print $10}'", "r");
   FILE* prc1 = popen("cat /sys/class/net/end0/duplex", "r");
   const int buffer_size = 10;
@@ -276,13 +291,16 @@ void check_ethernet_state() {
 
 
   if(strncmp(buffer_duplex, "full", 4) == 0 && (strncmp(buffer_speed, "1000", 4) == 0 || strncmp(buffer_speed, "100", 3) == 0)) {
-    set_green(lighting_time);
+    // set_green(lighting_time);
+    sc_green(led);
   }else if( (strncmp(buffer_duplex, "half", 4) == 0 && (strncmp(buffer_speed, "100", 3) == 0 || strncmp(buffer_speed, "10", 2) == 0)) ||
       (strncmp(buffer_duplex, "full", 4) == 0 && strncmp(buffer_speed, "10", 2) == 0) ) {
-    set_yellow(lighting_time);
+    // set_yellow(lighting_time);
+    sc_yellow(led);
 
   }else{
-    set_red(lighting_time);
+    // set_red(lighting_time);
+    sc_red(led);
   }
   // printf("CHECKER: %s %s\n", buffer_duplex, buffer_speed);
   // strcat(buffer_duplex, buffer_speed);
